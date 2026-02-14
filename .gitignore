@@ -1,0 +1,16 @@
+# Dataset
+data/raw/
+
+# Models
+*.pth
+
+# Logs & plots
+*.png
+logs/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# System
+.DS_Store
