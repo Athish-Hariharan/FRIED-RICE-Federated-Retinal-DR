@@ -6,10 +6,18 @@ from training.transforms import train_transforms, val_transforms
 from federated.client import FederatedClient
 from federated.server import fed_avg
 from federated.utils import create_non_iid_partitions
+import pandas as pd
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load full dataset
+# ---- Compute Class Weights (same as centralized) ----
+df = pd.read_csv("data/raw/aptos/train_1.csv")
+class_counts = df.iloc[:,1].value_counts().sort_index()
+total_samples = class_counts.sum()
+class_weights = total_samples / (len(class_counts) * class_counts)
+class_weights = torch.tensor(class_weights.values, dtype=torch.float32)
+
+# ---- Load Dataset ----
 train_dataset = AptosDataset(
     csv_file="data/raw/aptos/train_1.csv",
     img_dir="data/raw/aptos/train_images",
@@ -24,19 +32,26 @@ val_dataset = AptosDataset(
 
 val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
 
-# Create non-IID clients
+# ---- Create Non-IID Clients ----
 client_datasets = create_non_iid_partitions(train_dataset, num_clients=3)
+
 clients = []
+client_sizes = []
 
 for subset in client_datasets:
     loader = DataLoader(subset, batch_size=16, shuffle=True)
     model = ResNetDR().to(device)
-    clients.append(FederatedClient(model, loader, device))
 
-# Initialize global model
+    clients.append(
+        FederatedClient(model, loader, device, class_weights=class_weights)
+    )
+
+    client_sizes.append(len(subset))
+
+# ---- Initialize Global Model ----
 global_model = ResNetDR().to(device)
 
-rounds = 10
+rounds = 20
 local_epochs = 1
 
 for r in range(rounds):
@@ -48,9 +63,10 @@ for r in range(rounds):
         weights = client.train(epochs=local_epochs)
         client_weights.append(weights)
 
-    global_model = fed_avg(global_model, client_weights)
+    # Weighted FedAvg
+    global_model = fed_avg(global_model, client_weights, client_sizes)
 
-    # Evaluate global model
+    # ---- Evaluate Global Model ----
     global_model.eval()
     correct = 0
     total = 0
