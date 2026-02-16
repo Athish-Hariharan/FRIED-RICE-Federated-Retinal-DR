@@ -10,7 +10,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from data.dataset import AptosDataset
 from training.transforms import train_transforms, val_transforms
 from models.baseline import BaselineDR
-
+from models.resnet_model import ResNetDR
 
 # -----------------------------
 # Data Loaders
@@ -57,7 +57,7 @@ def train_model(class_weights, epochs=30, lr=0.001):
 
     train_loader, val_loader = get_dataloaders(batch_size=16)
 
-    model = BaselineDR().to(device)
+    model = ResNetDR().to(device)
 
     criterion = nn.CrossEntropyLoss(weight=class_weights.to(device))
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)

@@ -103,21 +103,17 @@ This is common in medical datasets.
 
 We computed:
 
-[
-w_i = \frac{N}{C \cdot n_i}
-]
+w_i = N / C . n_i
 
 Where:
-
-* ( N ) = total samples
-* ( C ) = number of classes
-* ( n_i ) = class frequency
+	* ( N ) = total samples
+	* ( C ) = number of classes
+	* ( n_i ) = class frequency
 
 Computed weights:
 
-```
 tensor([0.4086, 1.9533, 0.7252, 3.8052, 2.5043])
-```
+
 
 Interpretation:
 
@@ -130,7 +126,7 @@ Interpretation:
 
 Best validation accuracy:
 
-> **70.2%**
+> 70.2%
 
 Accuracy dropped — expected.
 
@@ -397,7 +393,7 @@ You have:
 ✔ Per-class breakdown
 ✔ Experimental logging
 
-You are no longer “training a model.”
+You are no longer “training a model”
 
 You are conducting controlled experiments.
 
@@ -419,14 +415,4 @@ Then compare:
 | ResNet + weights | ?    | ?        | ?              |
 
 Then we enter federated simulation.
-
----
-
-If you want, I can next:
-
-* Help you write this as a thesis methodology section
-* Or design the federated experiment structure
-* Or upgrade model to ResNet properly
-
-You’re now operating at research depth. 🔥
 

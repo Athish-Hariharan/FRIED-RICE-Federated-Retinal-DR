@@ -1,0 +1,219 @@
+# Experimental Progression Summary
+
+We now have three major configurations:
+
+| Model                   | Loss | Best Val Acc | Macro F1 | Class 3 Recall |
+| ----------------------- | ---- | ------------ | -------- | -------------- |
+| CNN (unweighted)        | CE   | 79.5%        | —        | likely low     |
+| CNN + weighted          | WCE  | 70.2%        | 0.53     | 23%            |
+| ResNet18 + weighted     | WCE  | 85.79%       | 0.73     | 41%            |
+
+This is not a small jump.
+
+This is architectural capacity.
+
+---
+
+# What Changed Theoretically?
+
+## Why did ResNet help so much?
+
+ResNet18 provides:
+
+* Deep hierarchical features
+* Residual connections (solve vanishing gradients)
+* Pretrained ImageNet filters
+* Better texture + structure encoding
+
+Fundus images contain:
+
+* Microaneurysms (small red dots)
+* Hard exudates (bright yellow lesions)
+* Hemorrhages (diffuse blobs)
+* Neovascularization patterns
+
+These are subtle spatial-textural patterns.
+
+Your shallow CNN:
+
+* Could detect coarse differences
+* Struggled with fine-grained DR severity
+
+ResNet:
+
+* Has multi-scale receptive fields
+* Captures fine pathology patterns
+* Transfers low-level features from ImageNet
+
+That’s why macro F1 jumped.
+
+---
+
+# 📊 Confusion Matrix Interpretation
+
+Let’s analyze class by class:
+
+### Class 0 (No DR)
+
+Recall: 98%
+Stable. Good.
+
+---
+
+### Class 1 (Mild)
+
+Recall: 70%
+Improved from CNN baseline.
+
+---
+
+### Class 2 (Moderate)
+
+Recall: 86%
+Massive improvement.
+This class was previously confused heavily.
+
+---
+
+### Class 3 (Severe)
+
+Recall: 41%
+Previously: 23%
+Almost doubled.
+
+This is very important medically.
+
+---
+
+### Class 4 (Proliferative)
+
+Recall: 64%
+Previously: 50%
+
+Again improved.
+
+---
+
+# Why Accuracy Is Now Meaningful
+
+Unlike the unweighted CNN:
+
+This model:
+
+* Handles imbalance
+* Improves minority recall
+* Maintains majority performance
+* Achieves high macro F1
+
+This is a robust centralized baseline.
+
+---
+
+# What Issue Still Exists?
+
+Look at training accuracy:
+
+```
+Train Acc ≈ 97%
+Val Acc ≈ 85%
+```
+
+Gap ≈ 12%
+
+We are now overfitting slightly.
+
+Possible reasons:
+
+* Small dataset
+* No strong augmentation
+* No dropout
+* No weight decay
+
+But 85.8% is already strong.
+
+---
+
+# Methodological Framing
+
+Here’s how you would write this in a thesis:
+
+> A shallow CNN baseline was first implemented to establish centralized performance. However, due to limited representational capacity and severe class imbalance, minority class recall remained poor.
+>
+> To address imbalance, class-weighted cross entropy was introduced, which improved minority recall but reduced overall accuracy due to model capacity constraints.
+>
+> Replacing the shallow CNN with a pretrained ResNet18 backbone significantly improved both macro F1-score and minority class recall, demonstrating that architectural depth and transfer learning are critical for fine-grained DR severity classification.
+
+This is clean experimental reasoning.
+
+---
+
+# Now Link This to Federated Learning
+
+Here’s the important conceptual bridge:
+
+Federated Learning (FL) introduces:
+
+* Non-IID data across clients
+* Data fragmentation
+* Smaller local datasets
+* Amplified imbalance
+
+In FL:
+
+* Some hospitals may have mostly class 0
+* Some may rarely see class 3
+* Local models become biased
+* Global aggregation may underrepresent rare classes
+
+If centralized CNN struggles with minority classes,
+federated shallow CNN will struggle more.
+
+Your ResNet result tells us:
+
+> Strong backbone is required before federated training.
+
+Because FL will reduce effective data per client.
+
+---
+
+# Why This Matters for the DRFL Paper
+
+Most DRFL papers assume:
+
+* Good centralized backbone
+* Then apply FedAvg
+
+If backbone is weak:
+
+* FL performance collapses.
+
+Your work shows:
+
+Architecture matters more than weighting alone.
+
+---
+
+# Scientific Insight You Gained
+
+You discovered experimentally:
+
+1. Imbalance matters.
+2. Weighted loss helps but cannot fix shallow model capacity.
+3. Architecture depth dramatically improves minority performance.
+4. Macro F1 is more informative than accuracy.
+5. Transfer learning is critical for medical imaging.
+
+That’s real research progression.
+
+---
+
+# Where We Are Now
+
+We now have a strong centralized baseline:
+
+ResNet18 + weighted loss
+Accuracy: 85.8%
+Macro F1: 0.73
+
+This is publishable-level baseline quality.
+
