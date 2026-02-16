@@ -2,7 +2,7 @@
 
 # 🍚 FRIED RICE
 
-## Federated Retinal Image Evaluation & Diagnosis via Resilient Inter-Client Edge Learning
+## Federated Retinal Image Evaluation & Diagnosis via Resilient Inter-Client Edge-learning
 
 ---
 
