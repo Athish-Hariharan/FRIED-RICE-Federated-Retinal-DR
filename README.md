@@ -1,260 +1,208 @@
----
+# 🍚 FRIED-RICE
 
-# 🍚 FRIED RICE
-
-## Federated Retinal Image Evaluation & Diagnosis via Resilient Inter-Client Edge-learning
+### Federated Research Integrated Environment for Diabetic Retinopathy
 
 ---
 
-## 🧠 Overview
+## 🧠 Project Evolution 
 
-FRIED RICE is a research-oriented deep learning framework for **Diabetic Retinopathy (DR) grading** using fundus retinal images.
+### 🔹 Phase 1 — Core Research (Baseline System)
 
-This project systematically investigates:
+Initially, this project focused on **federated learning for diabetic retinopathy classification**:
 
-* Centralized training under class imbalance
-* Federated Learning under statistical heterogeneity
-* Impact of non-IID client distributions
-* Stabilization via FedProx
-* Convergence degradation under extreme label skew
+* Centralized ResNet18 baseline
+* Federated learning using:
 
-The objective is to empirically quantify how federated learning behaves under realistic medical data distribution scenarios.
+  * FedAvg
+  * FedProx
+* Dirichlet-based non-IID simulation (α = 0.1 → 1.0)
+* Weighted loss to handle class imbalance
+* Basic logging + static plots
 
----
+### 🚧 Limitations of Initial System
 
-## 📊 Dataset
-
-**APTOS 2019 Diabetic Retinopathy Dataset**
-
-* 5 severity classes (0–4)
-* 2,930 training samples
-* Severe class imbalance
-
-| Class | Samples |
-| ----- | ------- |
-| 0     | 1434    |
-| 1     | 300     |
-| 2     | 808     |
-| 3     | 154     |
-| 4     | 234     |
-
-Weighted loss is used to mitigate imbalance bias.
+* No real-time monitoring of training
+* No visibility into **client behavior or drift**
+* Hard to interpret **why performance drops under non-IID**
+* No clinical usability (pure research code)
+* No reproducible or replayable experiments
 
 ---
 
-# 🏥 Centralized Baseline
+## 🚀 Phase 2 — Full Research System + Clinical Tool (Current Work)
 
-## Model
+We transformed the project into a **complete federated research + deployment platform**.
 
-* ResNet18 (ImageNet pretrained)
-* Final fully connected layer modified for 5-class classification
+### Major Additions:
 
-## Training Setup
+### 1️⃣ 📊 Real-Time Federated Dashboard
 
-| Parameter     | Value                 |
-| ------------- | --------------------- |
-| Loss          | Weighted CrossEntropy |
-| Optimizer     | SGD                   |
-| Learning Rate | 0.001                 |
-| Momentum      | 0.9                   |
-| Batch Size    | 16                    |
-| Epochs        | 30                    |
-| Image Size    | 224×224               |
+* Live training visualization
+* Client-server network graph
+* Accuracy vs rounds (live)
+* Drift visualization per client
+* Configurable experiments (α, clients, LR, algorithm)
 
-## Performance
-
-* **Best Validation Accuracy: 85.79%**
-* Macro F1 Score: ~0.73
-
-### Observations
-
-* Transfer learning significantly improves convergence.
-* Weighted loss improves minority-class recall.
-* Deep pretrained backbones are critical for DR severity grading.
+👉 Now we **observe training dynamics**, not just final results.
 
 ---
 
-# 🌐 Federated Learning Study
+### 2️⃣ 🔁 Replayable Experiment Engine
 
-## Motivation
+* Automatic JSON logging per round
+* Replay past experiments like a simulation
+* Enables reproducibility and debugging
 
-Medical imaging data is:
-
-* Distributed across institutions
-* Privacy-restricted
-* Demographically heterogeneous
-
-Federated Learning enables collaborative training without centralizing data.
-
-All experiments simulate **3 clients**.
+👉 Converts experiments into **reusable research artifacts**
 
 ---
 
-# 📉 Heterogeneity Simulation
+### 3️⃣ 📉 Drift-Aware Analysis
 
-Data is partitioned using a Dirichlet distribution:
+We introduced a key metric:
 
-* α = 1.0 → Near IID
-* α = 0.5 → Moderate heterogeneity
-* α = 0.1 → Severe non-IID
+[
+D_k = ||w_k - w_g||
+]
 
-Lower α induces stronger label skew per client.
+* Measures how much each client deviates
+* Directly linked to non-IID behavior
+* Visualized in UI (edge thickness, charts)
 
----
-
-# 📊 Federated Results (3 Clients)
-
-## FedAvg vs FedProx (μ = 0.01)
-
-| α   | FedAvg Best Acc | FedProx Best Acc |
-| --- | --------------- | ---------------- |
-| 1.0 | ~82%            | ~83%             |
-| 0.5 | ~77%            | ~78%             |
-| 0.1 | ~62%            | ~62%             |
+👉 Turns federated learning into an **observable system**
 
 ---
 
-## 🔎 Key Observations
+### 4️⃣ 🧠 DriftAwareAgg
 
-### 1️⃣ Heterogeneity Collapse
+New aggregation strategy:
 
-As α decreases:
+[
+\alpha_k \propto \frac{n_k}{D_k}
+]
 
-* Client divergence increases
-* Convergence slows
-* Global accuracy degrades
+* High-drift clients → lower influence
+* Low-drift clients → higher weight
 
-Severe heterogeneity (α=0.1) produces ~23% degradation relative to centralized training.
+✔ Reduces instability
+✔ Improves accuracy under non-IID
+✔ Works better than FedAvg in skewed settings
 
----
-
-### 2️⃣ FedProx Stabilization
-
-FedProx:
-
-* Improves stability under mild/moderate heterogeneity
-* Slightly improves best accuracy for α=1.0 and α=0.5
-* Does not recover performance under extreme skew (α=0.1)
-
-This behavior aligns with known theoretical limitations of proximal regularization under strong statistical heterogeneity.
+👉 Key improvement over existing methods
 
 ---
 
-### 3️⃣ Centralized vs Federated Gap
+### 5️⃣ 🏥 Clinical Diagnostic Interface
 
-| Setting      | Best Accuracy |
-| ------------ | ------------- |
-| Centralized  | 85.79%        |
-| FedAvg α=1.0 | ~82%          |
-| FedAvg α=0.1 | ~62%          |
+We extended beyond research:
 
-The performance gap increases monotonically with statistical heterogeneity.
+* Upload fundus image
+* DR grading (0–4)
+* Confidence distribution
+* Clinical findings + urgency
+* Image quality warnings
+
+👉 Makes system usable in **hospital/kiosk setting**
 
 ---
 
-# 🧪 Experimental Logging
+### 6️⃣ 🧪 Research Analysis Module
 
-Results automatically stored in:
+Dedicated analysis UI with:
+
+* Algorithm comparison (FedAvg vs FedProx vs DriftAware)
+* Non-IID degradation curves
+* Convergence + drift behavior
+* QWK (clinical metric)
+
+👉 Enables **paper-level analysis directly from UI**
+
+---
+
+### 7️⃣ 🧬 Domain-Invariant Preprocessing
+
+Pipeline added:
+
+* Circular crop
+* Ben Graham normalization
+* CLAHE
+* Standardization
+
+👉 Removes dataset bias across hospitals
+👉 Improves generalization
+
+---
+
+## 📊 Key Findings
+
+* Performance degrades as non-IID increases (α ↓)
+* FedProx stabilizes but doesn’t fully solve drift
+* Drift correlates strongly with accuracy loss
+* Drift-aware aggregation improves robustness
+
+---
+
+## 🧩 System Overview
 
 ```
-logs/results/
+Federated Training Engine
+        ↓
+JSON Logging + Checkpoints
+        ↓
+Live Dashboard (UI)
+        ↓
+Research Analysis
+        ↓
+Clinical Diagnostic Tool
 ```
 
-Plots generated in:
-
-```
-logs/plots/
-```
-
-Includes:
-
-* Accuracy vs Round
-* Accuracy vs Alpha
-* JSON experiment logs
-* Automated comparison utilities
+This makes FRIED-RICE not just a model — but a **complete ecosystem**.
 
 ---
 
-# 📁 Repository Structure
+## 🏗️ What Makes This Different
 
-```
-data/
-models/
-training/
-federated/
-experiments/
-logs/
-docs/
+Compared to a typical FL project:
+
+| Feature                 | Typical | FRIED-RICE |
+| ----------------------- | ------- | ---------- |
+| Training                | ✔       | ✔          |
+| Non-IID simulation      | ✔       | ✔          |
+| Real-time visualization | ❌       | ✔          |
+| Drift measurement       | ❌       | ✔          |
+| Novel aggregation       | ❌       | ✔          |
+| Replay system           | ❌       | ✔          |
+| Clinical interface      | ❌       | ✔          |
+
+---
+
+## ▶️ How to Run
+
+```bash
+python -m ui.launch_ui
 ```
 
 ---
 
-# 🔄 Version History
+## 📌 Final Takeaway
 
-| Tag                     | Description                       |
-| ----------------------- | --------------------------------- |
-| v1_cnn_weighted         | Custom CNN baseline               |
-| v2_resnet_weighted      | Centralized ResNet18              |
-| v3_fedavg_shard         | Shard-based extreme non-IID       |
-| v4_dirichlet_simulation | Dirichlet-based FL                |
-| v5_fedprox_study        | FedProx stabilization experiments |
+This project evolved from:
 
----
+> **“Train a federated model”**
 
-# 🎓 Contributions
+into:
 
-This repository provides:
-
-* Empirical quantification of heterogeneity-induced degradation
-* Dirichlet-based non-IID simulation framework
-* FedAvg vs FedProx comparative analysis
-* Reproducible logging and plotting pipeline
-* Modular FL experimentation platform
+> **“Understand, analyze, and deploy federated learning in real-world medical systems”**
 
 ---
 
-# 🚀 Future Directions
+## 🚀 Future Scope
 
-* Increase number of clients (3 → 10+)
-* Adaptive client weighting
-* Backbone freezing during FL
-* Personalized FL
-* Minority-aware aggregation
-* Domain shift simulation across hospitals
-
----
-
-# 🏁 Reproducibility
-
-Centralized training:
-
-```
-python -m training.train
-```
-
-Federated training:
-
-```
-python -m training.federated_train --method fedavg --alpha 0.5 --mu 0.0
-```
-
-Plot comparison:
-
-```
-python -m training.plot_alpha_comparison
-```
+* Scale to 10–50 clients (real hospital simulation)
+* Real GPU-based training integration
+* Differential privacy
+* Personalized federated learning
+* Deployment as hospital monitoring system
 
 ---
 
-# 📌 Conclusion
-
-FRIED RICE demonstrates that:
-
-* Federated learning performance strongly depends on client data heterogeneity.
-* Mild non-IID maintains competitive performance.
-* Severe heterogeneity causes substantial degradation.
-* FedProx provides limited stabilization but does not fully resolve divergence.
-
-This framework serves as a foundation for advanced federated medical AI research.
-
----
