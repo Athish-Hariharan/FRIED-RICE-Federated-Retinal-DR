@@ -1,16 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs & outputs
+logs/
+*.png
+*.pth
+
 # Dataset
 data/raw/
 
-# Models
-*.pth
-
-# Logs & plots
-*.png
-logs/
-
-# Python cache
-__pycache__/
-*.pyc
-
-# System
+# OS
 .DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temp
+*.tmp

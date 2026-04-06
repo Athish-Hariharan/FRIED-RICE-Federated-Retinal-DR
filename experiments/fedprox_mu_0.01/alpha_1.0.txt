@@ -1,0 +1,59 @@
+========================================
+Experiment: FedProx
+Alpha: 1.0
+Mu: 0.01
+Model: ResNet18 (Pretrained)
+Local Epochs: 1
+Batch Size: 16
+Clients: 3
+Optimizer: SGD (lr=0.001, momentum=0.9)
+Class Weights: Enabled
+Date: 2026-02-15
+========================================
+
+Centralized Baseline Accuracy:
+85.79%
+
+----------------------------------------
+Round-wise Global Validation Accuracy:
+----------------------------------------
+RRound 1/20 - Global Val Acc: 77.05%
+Round 2/20 - Global Val Acc: 80.33%
+Round 3/20 - Global Val Acc: 79.23%
+Round 4/20 - Global Val Acc: 75.14%
+Round 5/20 - Global Val Acc: 76.50%
+Round 6/20 - Global Val Acc: 79.23%
+Round 7/20 - Global Val Acc: 81.15%
+Round 8/20 - Global Val Acc: 80.33%
+Round 9/20 - Global Val Acc: 81.42%
+Round 10/20 - Global Val Acc: 79.23%
+Round 11/20 - Global Val Acc: 81.97%
+Round 12/20 - Global Val Acc: 81.69%
+Round 13/20 - Global Val Acc: 81.69%
+Round 14/20 - Global Val Acc: 81.97%
+Round 15/20 - Global Val Acc: 80.60%
+Round 16/20 - Global Val Acc: 81.15%
+Round 17/20 - Global Val Acc: 81.15%
+Round 18/20 - Global Val Acc: 82.24%
+Round 19/20 - Global Val Acc: 83.06%
+Round 20/20 - Global Val Acc: 82.51%
+----------------------------------------
+
+Best Validation Accuracy:
+83.06%
+
+Final Validation Accuracy:
+82.51%
+
+----------------------------------------
+Gap vs Centralized:
+Centralized - Best = 85.79 - 83.06 = 2.73%
+
+----------------------------------------
+Observations:
+- Convergence stability: Moderate
+- Oscillation: Low / Moderate / High
+- Trend: Converging / Plateau / Unstable
+- Notes: Mild non-IID scenario
+========================================
+

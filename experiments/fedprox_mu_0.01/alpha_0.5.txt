@@ -1,0 +1,58 @@
+========================================
+Experiment: FedProx
+Alpha: 0.5
+Mu: 0.01
+Model: ResNet18 (Pretrained)
+Local Epochs: 1
+Batch Size: 16
+Clients: 3
+Optimizer: SGD (lr=0.001, momentum=0.9)
+Class Weights: Enabled
+Date: 2026-02-15
+========================================
+
+Centralized Baseline Accuracy:
+85.79%
+
+----------------------------------------
+Round-wise Global Validation Accuracy:
+----------------------------------------
+Round 1/20 - Global Val Acc: 58.74%
+Round 2/20 - Global Val Acc: 67.21%
+Round 3/20 - Global Val Acc: 64.21%
+Round 4/20 - Global Val Acc: 72.95%
+Round 5/20 - Global Val Acc: 65.57%
+Round 6/20 - Global Val Acc: 73.50%
+Round 7/20 - Global Val Acc: 68.31%
+Round 8/20 - Global Val Acc: 70.49%
+Round 9/20 - Global Val Acc: 72.95%
+Round 10/20 - Global Val Acc: 70.77%
+Round 11/20 - Global Val Acc: 70.77%
+Round 12/20 - Global Val Acc: 73.22%
+Round 13/20 - Global Val Acc: 69.40%
+Round 14/20 - Global Val Acc: 77.60%
+Round 15/20 - Global Val Acc: 74.86%
+Round 16/20 - Global Val Acc: 77.87%
+Round 17/20 - Global Val Acc: 71.58%
+Round 18/20 - Global Val Acc: 77.32%
+Round 19/20 - Global Val Acc: 75.68%
+Round 20/20 - Global Val Acc: 73.50%
+----------------------------------------
+
+Best Validation Accuracy:
+77.87%
+
+Final Validation Accuracy:
+73.50%
+
+----------------------------------------
+Gap vs Centralized:
+Centralized - Best = 7.92-12.29%
+
+----------------------------------------
+Observations:
+- Peak improved over FedAvg
+- Still oscillatory
+- Partial mitigation
+========================================
+

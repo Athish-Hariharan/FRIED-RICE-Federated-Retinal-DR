@@ -1,0 +1,58 @@
+========================================
+Experiment: FedAvg
+Alpha: 1.0
+Mu: N/A
+Model: ResNet18 (Pretrained)
+Local Epochs: 1
+Batch Size: 16
+Clients: 3
+Optimizer: SGD (lr=0.001, momentum=0.9)
+Class Weights: Enabled
+Date: 2026-02-15
+========================================
+
+Centralized Baseline Accuracy:
+85.79%
+
+----------------------------------------
+Round-wise Global Validation Accuracy:
+----------------------------------------
+Round 1/20 - Global Val Acc: 65.57%
+Round 2/20 - Global Val Acc: 72.13%
+Round 3/20 - Global Val Acc: 76.23%
+Round 4/20 - Global Val Acc: 73.77%
+Round 5/20 - Global Val Acc: 73.22%
+Round 6/20 - Global Val Acc: 79.51%
+Round 7/20 - Global Val Acc: 77.87%
+Round 8/20 - Global Val Acc: 77.87%
+Round 9/20 - Global Val Acc: 78.96%
+Round 10/20 - Global Val Acc: 77.60%
+Round 11/20 - Global Val Acc: 79.51%
+Round 12/20 - Global Val Acc: 81.15%
+Round 13/20 - Global Val Acc: 80.87%
+Round 14/20 - Global Val Acc: 80.05%
+Round 15/20 - Global Val Acc: 81.69%
+Round 16/20 - Global Val Acc: 81.97%
+Round 17/20 - Global Val Acc: 79.23%
+Round 18/20 - Global Val Acc: 80.05%
+Round 19/20 - Global Val Acc: 81.15%
+Round 20/20 - Global Val Acc: 81.69%
+----------------------------------------
+
+Best Validation Accuracy:
+81.97%
+
+Final Validation Accuracy:
+81.69%
+
+----------------------------------------
+Gap vs Centralized:
+Centralized - Best = 85.79 - 81.97 = 3.82%
+
+----------------------------------------
+Observations:
+- Stable convergence
+- Small degradation
+- Minimal client drift
+========================================
+

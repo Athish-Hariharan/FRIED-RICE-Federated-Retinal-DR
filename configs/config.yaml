@@ -1,0 +1,12 @@
+dataset:
+  path: /kaggle/input/eyepacs-aptos-messidor-diabetic-retinopathy
+
+federated:
+  clients: 10
+  alpha: 0.5
+  rounds: 20
+  local_epochs: 1
+
+training:
+  batch_size: 16
+  lr: 0.001
